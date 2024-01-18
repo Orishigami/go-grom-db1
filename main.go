@@ -38,27 +38,37 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
+	err = database.AutoMigrate(&models.Student{})
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+	}
 
 	// สร้างตัวแปร itemRepo เพื่อเรียกใช้งาน ItemRepository
 	itemRepo := models.NewItemRepository(database)
+	studentRepo := models.NewStudentRepository(database)
 
 	r := gin.Default()
 
 	// api /items จะเป็นการเรียกใช้งานฟังก์ชัน GetItems ใน ItemRepository
 	r.GET("/items", itemRepo.GetItems)
+	r.GET("/students", studentRepo.GetStudent)
 
 	// api /items/:id จะเป็นการเรียกใช้งานฟังก์ชัน GetItem ใน ItemRepository
 	r.POST("/items", itemRepo.PostItem)
+	r.POST("/students", studentRepo.GetStudent)
 
 	// api /items/:id จะเป็นการเรียกใช้งานฟังก์ชัน GetItem ใน ItemRepository
 	// /items/1 จะเป็นการส่งค่า id ที่เป็นตัวเลข 1 ไปยังฟังก์ชัน GetItem ใน ItemRepository
 	r.GET("/items/:id", itemRepo.GetItem)
+	r.GET("/students/:id", studentRepo.GetStudent)
 
 	// api /items/:id จะเป็นการเรียกใช้งานฟังก์ชัน UpdateItem ใน ItemRepository
 	r.PUT("/items/:id", itemRepo.UpdateItem)
+	r.PUT("/students/:id", studentRepo.GetStudent)
 
 	// api /items/:id จะเป็นการเรียกใช้งานฟังก์ชัน DeleteItem ใน ItemRepository
 	r.DELETE("/items/:id", itemRepo.DeleteItem)
+	r.DELETE("/students/:id", studentRepo.GetStudent)
 
 	// ถ้าไม่มี api ที่ตรงกับที่กำหนด จะแสดงข้อความ Not found
 	r.NoRoute(func(c *gin.Context) {
