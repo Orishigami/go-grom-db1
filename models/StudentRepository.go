@@ -22,9 +22,9 @@ func NewStudentRepository(db *gorm.DB) *StudentRepository {
 // ฟังก์ชัน GetStudents รับพารามิเตอร์เป็น c *gin.Context และมีการส่งกลับค่าเป็น JSON กลับไปให้ผู้ใช้งานผ่าน c.JSON(200, students) ซึ่ง c คือตัวแปรที่เป็น pointer ของ gin.Context
 // ในกรณีนี้เราไม่ต้องใช้ return เพราะเราใช้ c.JSON แทน
 // ฟังก์ชันนี้ parameter ที่รับมาจะเป็น pointer ของ gin.Context เพราะเราจะใช้ c.JSON ส่งค่ากลับไปให้ผู้ใช้งาน
-func (r *StudentRepository) GetItems(c *gin.Context) {
+func (r *StudentRepository) GetStudents(c *gin.Context) {
 	var students []Student
-	// ดึงข้อมูล Item ทั้งหมดจากฐานข้อมูล และเก็บลงในตัวแปร items
+	// ดึงข้อมูล Student ทั้งหมดจากฐานข้อมูล และเก็บลงในตัวแปร students
 	r.Db.Find(&students)  // SELECT * FROM students
 	c.JSON(200, students) // ส่งข้อมูลกลับไปให้ผู้ใช้งาน
 }
