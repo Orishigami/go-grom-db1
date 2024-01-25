@@ -5,6 +5,9 @@ import (
 	"log"      // ใช้สำหรับแสดงข้อความ error ออกทางหน้าจอ
 	"net/http" // ใช้สำหรับสร้าง web server
 	"os"       // ใช้สำหรับอ่านค่า environment variable
+	"time"
+
+	"github.com/gin-contrib/cors"
 
 	"github.com/Orishigami/go-grom-db1/db"     // นำเข้า db
 	"github.com/Orishigami/go-grom-db1/models" // นำเข้า models
@@ -53,6 +56,16 @@ func main() {
 	subjectRepo := models.NewSubjectRepository(database)
 
 	r := gin.Default()
+
+	// กำหนด cors (Cross-Origin Resource Sharing)
+	r.Use(cors.New(cors.Config{
+		// 3000 คือ port ที่ใช้งานใน frontend react
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// api /items จะเป็นการเรียกใช้งานฟังก์ชัน GetItems ใน ItemRepository
 	r.GET("/items", itemRepo.GetItems)
